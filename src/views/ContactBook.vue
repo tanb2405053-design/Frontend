@@ -3,6 +3,7 @@
     <div class="col-md-10">
       <InputSearch v-model="searchText" />
     </div>
+    
     <div class="mt-3 col-md-6">
       <h4>
         Danh bạ
@@ -16,13 +17,14 @@
       <p v-else>Không có liên hệ nào.</p>
 
       <div class="mt-3 row justify-content-around align-items-center">
-        <button class="btn btn-sm btn-primary" @click="refreshList()">
+        <button class="btn btn-sm btn-primary" @click="refreshList">
           <i class="bi bi-arrow-clockwise"></i> Làm mới
         </button>
 
         <button class="btn btn-sm btn-success" @click="goToAddContact">
           <i class="bi bi-plus-lg"></i> Thêm mới
         </button>
+        
         <button
           class="btn btn-sm btn-danger"
           @click="removeAllContacts"
@@ -31,6 +33,7 @@
         </button>
       </div>
     </div>
+
     <div class="mt-3 col-md-6">
       <div v-if="activeContact">
         <h4>
@@ -38,6 +41,16 @@
           <i class="bi bi-person-lines-fill"></i>
         </h4>
         <ContactCard :contact="activeContact" />
+        <router-link
+          :to="{
+            name: 'contact.edit',
+            params: { id: activeContact._id },
+          }"
+        >
+          <span class="mt-2 badge badge-warning">
+            <i class="fas fa-edit"></i> Hiệu chỉnh
+          </span>
+        </router-link>     
       </div>
     </div>
   </div>
@@ -68,16 +81,18 @@ export default {
     },
   },
   computed: {
+    // Chuyển toàn bộ dữ liệu liên hệ thành chữ thường để tìm kiếm chính xác hơn
     contactStrings() {
       return this.contacts.map((contact) => {
         const { name, email, address, phone } = contact;
-        return [name, email, address, phone].join("");
+        return [name, email, address, phone].join("").toLowerCase();
       });
     },
     filteredContacts() {
       if (!this.searchText) return this.contacts;
+      const filterLower = this.searchText.toLowerCase();
       return this.contacts.filter((_contact, index) =>
-        this.contactStrings[index].includes(this.searchText)
+        this.contactStrings[index].includes(filterLower)
       );
     },
     activeContact() {
