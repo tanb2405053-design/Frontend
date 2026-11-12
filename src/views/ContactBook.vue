@@ -22,9 +22,9 @@
         </button>
 
         <button class="btn btn-sm btn-success" @click="goToAddContact">
-          <i class="bi bi-plus-lg"></i> Thêm mới
+          <i class="bi bi-plus-lg"></i> Thêm mới    
         </button>
-        
+                
         <button
           class="btn btn-sm btn-danger"
           @click="removeAllContacts"
